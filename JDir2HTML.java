@@ -43,7 +43,7 @@ class JDir2HTML extends JFrame implements ActionListener {
 	private final int WRITABLE_FILE = 1;
 	private final int INVALID_FILE = 2;
 	private final int NO_FILE = 3;
-	public final String VERSION = "0.1.1alpha (2006-10-07)";
+	public final String VERSION = "0.1.1 (2006-10-07)";
 
 	public JDir2HTML() {
 		super("Generate a directory listing");
