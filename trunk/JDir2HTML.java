@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2006, Sander Dijkhuis <mailto:sander.dijkhuis@gmail.com>
+ *                 and Mnix <mailto:mnix.code@gmail.com>
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -9,9 +10,9 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the University of California, Berkeley nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ *     * Neither the name of the software's authors nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -32,7 +33,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
+class JDir2HTML extends JFrame implements ActionListener, HyperlinkListener {
 	private File directoryToList;
 	private File outputFile;
 	private String HTMLOutput;
@@ -44,7 +45,7 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 	private final int WRITABLE_FILE = 1;
 	private final int INVALID_FILE = 2;
 	private final int NO_FILE = 3;
-	public final String VERSION = "0.1.1 (2006-10-07)";
+	public final String VERSION = "0.2 (2006-11-26)"; /* first version to only support JSE 6 */
 
 	public JDir2HTML() {
 		super("Generate a directory listing");
@@ -137,13 +138,17 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 					this.pack();
 				} else {
 					JOptionPane.showMessageDialog(this,
-						"You don't have permission to read the selected directory, so an index cannot be created right now. Please check your security settings and try again, or choose another directory.",
+						  "You don't have permission to read the\n"
+						+ "selected directory, so an index cannot be\n"
+						+ "created right now. Please check your\n"
+						+ "security settings and try again, or choose\n"
+						+ "another directory.",
 						"No permission to read from directory.",
 						JOptionPane.WARNING_MESSAGE);
 				}
 			} else {
 				JOptionPane.showMessageDialog(this,
-					"The chosen directory is not a real directory or "
+					"The chosen directory is not a real directory or\n"
 					+ "doesn't exist. Please choose another directory.",
 					"Directory error",
 					JOptionPane.ERROR_MESSAGE);
@@ -163,7 +168,8 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 					if (selectedFile.exists()) {
 						Object[] overwriteOptions = {"Overwrite", "Choose another file", "Don't choose a file"};
 						int overwrite = JOptionPane.showOptionDialog(this,
-							"The file you've chosen already exists. Do you want to overwrite this file?",
+							  "The file you've chosen already exists.\n"
+							+ "Do you want to overwrite this file?",
 							"Overwrite file?",
 							JOptionPane.YES_NO_CANCEL_OPTION,
 							JOptionPane.QUESTION_MESSAGE,
@@ -194,7 +200,10 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 				return WRITABLE_FILE;
 			} else {
 				JOptionPane.showMessageDialog(this,
-					"The file you've chosen already exists, but you have no permission to modify or replace it. Please choose another file name.",
+					  "The file you've chosen already exists,\n"
+					+ "but you have no permission to modify or\n"
+					+ "replace it. Please choose another file\n"
+					+ "name.",
 					"File not writable",
 					JOptionPane.ERROR_MESSAGE);
 				return INVALID_FILE;
@@ -204,7 +213,10 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 				return WRITABLE_FILE;
 			} else {
 				JOptionPane.showMessageDialog(this,
-					"The file you've chosen does not exist and cannot be created. Please try using a directory in which you have permission to create new files.",
+					  "The file you've chosen does not exist and\n"
+					+ "cannot be created. Please try using a\n"
+					+ "directory in which you have permission\n"
+					+ "to create new files.",
 					"Cannot create file",
 					JOptionPane.ERROR_MESSAGE);
 				return INVALID_FILE;
@@ -219,7 +231,8 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 	}
 
 	public void hyperlinkUpdate(HyperlinkEvent e) {
-		if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) browse(e.getDescription());
+		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
+			browse(e.getDescription());
 	}
 	
 	public void actionPerformed(ActionEvent event) {
@@ -233,17 +246,22 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 		} else if (eventSource == generateButton) {
 			if (directoryToList == null) {
 				JOptionPane.showMessageDialog(this,
-					"You haven't selected a directory to list. Please select a directory and try again.",
+					  "You haven't selected a directory to list.\n"
+					+ "Please select a directory and try again.",
 					"No source directory selected",
 					JOptionPane.ERROR_MESSAGE);
 			} else if (!directoryToList.exists()) {
 				JOptionPane.showMessageDialog(this,
-					"The directory you've selected doesn't exist. Please select a directory that does and try again.",
+					  "The directory you've selected doesn't\n"
+					+ "exist. Please select a directory that\n"
+					+ "does and try again.",
 					"Directory doesn't exist",
 					JOptionPane.ERROR_MESSAGE);
 			} else if (!directoryToList.canRead()) {
 				JOptionPane.showMessageDialog(this,
-					"You haven't got permission to read the selected directory. Please check your security settings and try again.",
+					  "You haven't got permission to read the\n"
+					+ "selected directory. Please check your\n"
+					+ "security settings and try again.",
 					"No permission to read from directory",
 					JOptionPane.ERROR_MESSAGE);
 			} else {
@@ -253,7 +271,9 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 						break;
 					case NO_FILE:
 						JOptionPane.showMessageDialog(this,
-							"You haven't selected a file to store the listing in. Please select a file and try again.",
+							  "You haven't selected a file to store\n"
+							+ "the listing in. Please select a file and\n"
+							+ "try again.",
 							"No target file selected",
 							JOptionPane.ERROR_MESSAGE);
 				}
@@ -292,6 +312,7 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 
 		JTextArea copyrightText = new JTextArea(
 			"Copyright (c) 2006, Sander Dijkhuis <mailto:sander.dijkhuis@gmail.com> \n"
+			+ "                and Mnix <mailto:mnix.code@gmail.com>\n"
 			+ "All rights reserved.\n"
 			+ "Redistribution and use in source and binary forms, with or without\n"
 			+ "modification, are permitted provided that the following conditions are met:\n\n"
@@ -300,9 +321,9 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 			+ "    * Redistributions in binary form must reproduce the above copyright\n"
 			+ "      notice, this list of conditions and the following disclaimer in the\n"
 			+ "      documentation and/or other materials provided with the distribution.\n"
-			+ "    * Neither the name of the University of California, Berkeley nor the\n"
-			+ "      names of its contributors may be used to endorse or promote products\n"
-			+ "      derived from this software without specific prior written permission.\n\n"
+			+ "    * Neither the name of the software's authors nor the names of its\n"
+			+ "      contributors may be used to endorse or promote products derived from\n"
+			+ "      this software without specific prior written permission.\n\n"
 			+ "THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY\n"
 			+ "EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n"
 			+ "WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n"
@@ -313,6 +334,7 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 			+ "ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n"
 			+ "(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n"
 			+ "SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.");
+		copyrightText.setFont(new Font("Monospaced", Font.PLAIN, 10));
 		copyrightText.setEditable(false);
 		copyrightText.setLineWrap(false);
 		copyrightText.setWrapStyleWord(true);
@@ -346,7 +368,8 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 			file.close();
 
 			JOptionPane.showMessageDialog(this,
-				"The directory listing has successfully been created and saved.",
+				  "The directory listing has successfully\n"
+				+ "been created and saved.",
 				"Yay, I did it again!",
 				JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException e) {
@@ -392,7 +415,7 @@ class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 				UIManager.getCrossPlatformLookAndFeelClassName());
 			SwingUtilities.updateComponentTreeUI(this);
 		} catch (Exception e) {
-			System.err.println("Couldn't use the system look and feel: " + e);
+			System.err.println("Couldn't use the cross-platform look and feel: " + e);
 		}
 	}
 
