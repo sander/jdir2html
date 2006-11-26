@@ -30,14 +30,15 @@ import java.util.*;
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.*;
 
-class JDir2HTML extends JFrame implements ActionListener {
+class JDir2HTML extends JFrame implements ActionListener,HyperlinkListener {
 	private File directoryToList;
 	private File outputFile;
 	private String HTMLOutput;
 	private JButton directoryButton;
 	private JButton fileButton;
-	private JButton aboutButton;
+	private JButton aboutButton;	
 	private JButton closeButton;
 	private JButton generateButton;
 	private final int WRITABLE_FILE = 1;
@@ -217,6 +218,10 @@ class JDir2HTML extends JFrame implements ActionListener {
 		this.pack();
 	}
 
+	public void hyperlinkUpdate(HyperlinkEvent e) {
+		if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) browse(e.getDescription());
+	}
+	
 	public void actionPerformed(ActionEvent event) {
 		Object eventSource = event.getSource();
 		if (eventSource == closeButton) {
@@ -255,6 +260,19 @@ class JDir2HTML extends JFrame implements ActionListener {
 			}
 		} else if (eventSource == aboutButton) {
 			showAboutDialog();
+		} 
+	}
+	
+	private void browse(String url) {
+		try {
+			Desktop.getDesktop().browse(new java.net.URI(url));
+		}
+		catch(java.net.URISyntaxException ex) {
+			System.out.println(ex.getMessage());
+		}
+		catch(IOException ex) {
+			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 		}
 	}
 
@@ -264,10 +282,13 @@ class JDir2HTML extends JFrame implements ActionListener {
 		JLabel aboutHeading = new JLabel("<html><big>JDir2HTML</big> v" + VERSION + "</html>");
 		aboutHeading.setBorder(BorderFactory.createEmptyBorder(12, 12, 6, 12));
 		aboutWindow.add(aboutHeading, BorderLayout.PAGE_START);
-
-		JLabel aboutInfo = new JLabel("<html>Please report bugs at <tt>&lt;http://code.google.com/p/jdir2html/&gt;</tt><br>or send them by email to <tt>&lt;sander.dijkhuis@gmail.com&gt;</tt>.</html>");
+		
+		JEditorPane aboutInfo = new JEditorPane("text/html","<html><b>Please report bugs at</b> <tt>&lt;<a href=http://code.google.com/p/jdir2html/>http://code.google.com/p/jdir2html/</a>&gt;</tt><br><b>or send them by email to</b> <tt>&lt;<a href=mailto:sander.dijkhuis@gmail.com>sander.dijkhuis@gmail.com</a>&gt;</tt>.</html>");
+		aboutInfo.setEditable(false);
+		aboutInfo.setBackground(aboutWindow.getBackground());
 		aboutInfo.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
 		aboutWindow.add(aboutInfo, BorderLayout.CENTER);
+		aboutInfo.addHyperlinkListener(this);
 
 		JTextArea copyrightText = new JTextArea(
 			"Copyright (c) 2006, Sander Dijkhuis <mailto:sander.dijkhuis@gmail.com> \n"
