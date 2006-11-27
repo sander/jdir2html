@@ -39,7 +39,9 @@ class JDir2HTML extends JFrame implements ActionListener, HyperlinkListener {
 	private String HTMLOutput;
 	private JButton directoryButton;
 	private JButton fileButton;
-	private JButton aboutButton;	
+	private JButton aboutButton;
+	private JDialog aboutWindow;
+	private JButton closeButton2 = new JButton("Close");
 	private JButton closeButton;
 	private JButton generateButton;
 	private final int WRITABLE_FILE = 1;
@@ -280,7 +282,9 @@ class JDir2HTML extends JFrame implements ActionListener, HyperlinkListener {
 			}
 		} else if (eventSource == aboutButton) {
 			showAboutDialog();
-		} 
+		} else if(eventSource == closeButton2) {
+			aboutWindow.dispose();
+		}
 	}
 	
 	private void browse(String url) {
@@ -297,11 +301,24 @@ class JDir2HTML extends JFrame implements ActionListener, HyperlinkListener {
 	}
 
 	private void showAboutDialog() {
-		JDialog aboutWindow = new JDialog(this, "About JDir2HTML");
-
+		aboutWindow = new JDialog(this, "About JDir2HTML");
+		
+		JPanel panel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		
 		JLabel aboutHeading = new JLabel("<html><big>JDir2HTML</big> v" + VERSION + "</html>");
 		aboutHeading.setBorder(BorderFactory.createEmptyBorder(12, 12, 6, 12));
-		aboutWindow.add(aboutHeading, BorderLayout.PAGE_START);
+		gbc.anchor = gbc.WEST;
+		gbc.weightx = 1;
+		panel.add(aboutHeading);
+		
+		gbc.insets = new Insets(16,0,0,0);
+		gbc.anchor = gbc.CENTER;
+		gbc.weightx = 1;
+		panel.add(closeButton2,gbc);
+		closeButton2.addActionListener(this);
+		
+		aboutWindow.add(panel, BorderLayout.PAGE_START);
 		
 		JEditorPane aboutInfo = new JEditorPane("text/html","<html><b>Please report bugs at</b> <tt>&lt;<a href=http://code.google.com/p/jdir2html/>http://code.google.com/p/jdir2html/</a>&gt;</tt><br><b>or send them by email to</b> <tt>&lt;<a href=mailto:sander.dijkhuis@gmail.com>sander.dijkhuis@gmail.com</a>&gt;</tt>.</html>");
 		aboutInfo.setEditable(false);
